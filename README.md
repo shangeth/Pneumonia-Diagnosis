@@ -1,4 +1,5 @@
 # Pneumonia-Diagnosis
+Diagnosis of Pneumonia with Deep Learning by analysing the x-ray scan image with finetuned Resnet18 model.
 
 - ## Upload the x-ray scan image
 ![](assets/01-upload.gif)
