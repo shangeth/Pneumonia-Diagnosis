@@ -87,7 +87,7 @@ class ResNet(nn.Module):
     return x
 
 model_new = ResNet()
-model_new.load_state_dict(torch.load('model/trained_x_ray_classification1.pth', map_location='cpu'))
+model_new.load_state_dict(torch.load('model/trained_x_ray_classification.pth', map_location='cpu'))
    
 
 def img_to_tensor(image_name):
