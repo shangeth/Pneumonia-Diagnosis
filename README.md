@@ -1,3 +1,3 @@
 # Pneumonia-Diagnosis
 
-![]('assets/01-upload.gif')
+![](assets/01-upload.gif)
