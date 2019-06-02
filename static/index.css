@@ -1,0 +1,51 @@
+body {
+  background-image: url('bg.png'), url('bg2.png');
+  background-size: cover;
+  background-repeat: repeat-x, repeat;
+  color:white;
+}
+
+#box1{
+	/*background-color: white;*/
+	margin-left: auto;
+  	margin-right: auto;
+
+}
+
+.jumbotron{
+	background-color: rgba(0,0,0,0.7);
+	margin-left: auto;
+  	margin-right: auto;
+  	text-align: center;
+	  
+}
+
+#outerindex {
+    margin-left: auto;
+    margin-right: auto;
+    margin: 0;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+
+}
+
+#xray_img{
+	margin-left: auto;
+  	margin-right: auto;
+}
+
+#modelArc{
+  text-align: left;
+}
+
+
+@media (max-width: 992px) {
+  .container {
+    width: 100%;
+    max-width: none;
+  }
+}
