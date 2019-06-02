@@ -49,7 +49,7 @@ def submit_example(example):
 from PIL import Image
 import torch
 import torchvision
-from torchvision import transforms
+from torchvision import transforms, models
 import torch.nn as nn
 
 class Identity(nn.Module):
@@ -86,17 +86,16 @@ class ResNet(nn.Module):
     x = self.log_softmax(x)
     return x
 
+model_new = ResNet()
 model_new = torch.load('model/trained_x_ray_classification.pth', map_location='cpu')
+   
 
-int_to_class = ['NORMAL', 'PNEUMONIA']
-inference_transform = transforms.Compose([
+def img_to_tensor(image_name):
+  inference_transform = transforms.Compose([
         transforms.Resize(256),
         transforms.CenterCrop((224,224)),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
-   
-
-def img_to_tensor(image_name):
   convert = False
   image = Image.open(image_name)
   if image.mode == 'L':
@@ -115,6 +114,7 @@ def check_image(img):
   return pred, top_p.detach().numpy().reshape(-1)[0]*100
 
 def x_ray_pred(image):
+  int_to_class = ['NORMAL', 'PNEUMONIA']
   img, convert = img_to_tensor(image)
   visualize_cnn(img)
   pred, prob = check_image(img)
@@ -145,5 +145,5 @@ def visualize_cnn(x):
 
 
 # # # ------------------------------------------------------
-# if __name__ == "__main__":
-#   app.run(host= '0.0.0.0', debug=True)
+if __name__ == "__main__":
+  app.run(host= '0.0.0.0', debug=True)
