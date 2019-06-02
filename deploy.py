@@ -61,7 +61,7 @@ class Identity(nn.Module):
     
     
 class ResNet(nn.Module):
-  def __init__(self, mid_fc_dim=100, output_dim=2):
+  def __init__(self, mid_fc_dim=150, output_dim=2):
     super(ResNet, self).__init__()
     
     self.resnet = models.resnet18(pretrained=True)
@@ -87,7 +87,7 @@ class ResNet(nn.Module):
     return x
 
 model_new = ResNet()
-model_new = torch.load('model/trained_x_ray_classification.pth', map_location='cpu')
+model_new.load_state_dict(torch.load('model/trained_x_ray_classification1.pth', map_location='cpu'))
    
 
 def img_to_tensor(image_name):
@@ -107,6 +107,7 @@ def img_to_tensor(image_name):
   return image, convert
 
 def check_image(img):
+  model_new.eval()
   log_ps = model_new(img)
   ps = torch.exp(log_ps)
   top_p, top_class = ps.topk(1, dim=1)
@@ -135,6 +136,7 @@ def save_visual(output, name):
       img.save('static/visual_img/{}_{}.jpg'.format(name,i))
 
 def visualize_cnn(x):
+  model_new.eval()
   conv1 = nn.Sequential(*list(model_new.resnet.children())[:1])(x)[0,0:10,:,:]
   layer1 = nn.Sequential(*list(model_new.resnet.children())[:5])(x)[0,:10,:,:]
   layer2 = nn.Sequential(*list(model_new.resnet.children())[:6])(x)[0,:10,:,:]
