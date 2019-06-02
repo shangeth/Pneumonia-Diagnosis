@@ -8,4 +8,5 @@ Diagnosis of Pneumonia with Deep Learning by analysing the x-ray scan image with
 ![](assets/02-analyse_report.gif)
 
 - ## Example prediction
+Checkout the 2 examples NORMAL & PNEUMONIA , if you don't have a x-ray image.
 ![](assets/03-example.gif)
