@@ -17,12 +17,12 @@
         <h1 class="display-4">Diagnosis Report of the x ray</h1>
         <hr>
         {% if convert %}
-            <h2>The image uploaded is a single channel image, so it is converted to a RGB image. This may result in lower prediction confidence.</h2>
+            <h3>The image uploaded is a single channel image, so it is converted to a RGB image. This may result in lower prediction confidence.</h3>
 
             
         {% endif %}
 
-        <img class=".img-fluid" style="max-width: 100%; height: auto;" src="{{filename}}"><br>
+        <img class=".img-fluid" style="max-width: 50%; height: auto;" src="{{filename}}"><br>
         <br>
         <h2>Model Prediction : {{ pred }}</h2>
         <h2>Prediction Confidence : {{ prob }} %</h2>  
@@ -32,6 +32,13 @@
 
       </div> 
       <div class="jumbotron container-fluid">
+        <h1 class="display-4">Grad-Cam of the x-ray</h1>
+        <img class=".img-fluid" style="max-width: 50%; height: auto;" src="{{ url_for('static', filename='grad_cam/map.jpg')}}"><br>
+      </div>
+
+
+
+      <div id='cnn_visual_jumbotron' style="display: {{ cnn_visual }}" class="jumbotron container-fluid">
         <h1 class="display-4">Visualization of CNN Features</h1>
         <h4>5 filter outputs of conv1, layer1, layer2 layers for ResNet 18 model for this xray are shown below</h4> 
         <hr>
@@ -154,6 +161,7 @@
 
 
       </div>
+
 
     </div>
 

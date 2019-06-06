@@ -13,7 +13,7 @@
   </head>
   <body>
     <div id='outerindex' class="container-fluid row justify-content-center">
-      <div class="jumbotron col-8" >
+      <div class="jumbotron col-lg-8" >
         
         <h1>Pneumonia Diagnosis</h1>
         <h5> Upload the x-ray image to check for Pneumonia with a Deep learning Model trained with PyTorch</h5>
@@ -30,9 +30,15 @@
                 <div class="custom-file">
                   <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" name=photo onchange="readURL(this);" >
                   <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                  
                 </div>
               </div>
+
+              <!-- Default unchecked -->
+              <div class="custom-control custom-checkbox">
+                  <input name='is_cnn_feat' type="checkbox" class="custom-control-input" id="defaultUnchecked">
+                  <label class="custom-control-label" for="defaultUnchecked">CNN Features</label>
+              </div>
+
               </form>
               <div id='img_box'>
                 <img id="xray_img" class=".img-fluid" style="max-width: 100%; height: auto;" >
