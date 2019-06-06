@@ -20,7 +20,7 @@ def index():
     os.remove(f)
   for f in visual_files: 
     os.remove(f)
-  return render_template('index.html')
+  return render_template('index2.html')
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -34,12 +34,10 @@ def upload():
         # '<h1>Predicted Class = {}</h1><h1> Prob = {}% </h1><h1>Prediction = {}</h1>'.format(clss, prob, pred)
 @app.route('/example/<example>', methods=['GET', 'POST'])
 def submit_example(example):
-  if example =='normal':
-    clss, prob, pred, convert = x_ray_pred('static/example_imgs/n_xray.jpg')
-    filename = '../static/example_imgs/n_xray.jpg'
-  else:
-    clss, prob, pred, convert = x_ray_pred('static/example_imgs/p_xray.jpg')
-    filename = '../static/example_imgs/p_xray.jpg'
+  example_dict = {'n1':'n1.jpg', 'n2':'n2.jpeg', 'n3':'n3.jpg', 'p1':'p1.jpg', 'p2':'p2.jpg', 'p3':'p3.jpeg'}
+  clss, prob, pred, convert = x_ray_pred('static/example_imgs/'+str(example_dict[example]))
+  filename = '../static/example_imgs/'+str(example_dict[example])
+ 
   visual_files = sorted(glob.glob('static/visual_img/*'))
   return render_template('report.html', pred=pred, prob=round(prob,5), filename=filename, visual_files=visual_files, convert=convert)
 
