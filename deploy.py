@@ -38,16 +38,9 @@ def index():
 def upload():
     if request.method == 'POST' and 'photo' in request.files:
         filename = photos.save(request.files['photo'])
-        clss, prob, pred, convert = x_ray_pred('static/img/'+filename, request.form.get('is_cnn_feat'))
+        clss, prob, pred, convert = x_ray_pred('static/img/'+filename)
         filename = 'static/img/'+filename
-        if request.form.get('is_cnn_feat'):
-          visual_files = sorted(glob.glob('static/visual_img/*'))
-          is_cnn_feat = 'block'
-        else:
-          is_cnn_feat='none'
-          visual_files = []
-          
-        return render_template('report.html', pred=pred, prob=round(prob,5), filename=filename, visual_files=visual_files, convert=convert, cnn_visual=is_cnn_feat)
+        return render_template('report.html', pred=pred, prob=round(prob,5), filename=filename, convert=convert)
 
         # '<h1>Predicted Class = {}</h1><h1> Prob = {}% </h1><h1>Prediction = {}</h1>'.format(clss, prob, pred)
 
@@ -55,9 +48,9 @@ def upload():
 @app.route('/example/<example>', methods=['GET', 'POST'])
 def submit_example(example):
   example_dict = {'n1':'n1.jpg', 'n2':'n2.jpeg', 'n3':'n3.jpg', 'p1':'p1.jpg', 'p2':'p2.jpg', 'p3':'p3.jpeg'}
-  clss, prob, pred, convert = x_ray_pred('static/example_imgs/'+str(example_dict[example]), request.form.get('is_cnn_feat'))
+  clss, prob, pred, convert = x_ray_pred('static/example_imgs/'+str(example_dict[example]))
   filename = '../static/example_imgs/'+str(example_dict[example])
-  return render_template('report.html', pred=pred, prob=round(prob,5), filename=filename, visual_files=[], convert=convert, cnn_visual='none')
+  return render_template('report.html', pred=pred, prob=round(prob,5), filename=filename, convert=convert)
 
 
 
@@ -71,11 +64,9 @@ from resnet_models import *
 
 
 model =  ResNet()
-model.load_state_dict(torch.load('model/best_model.pt', map_location='cpu'))
-    
+model.load_state_dict(torch.load('model/best_model.pt', map_location='cpu'))    
 model.eval()
-model2 = ResNet2(model.cpu())
-model2.eval()
+
 
 
 
@@ -102,74 +93,18 @@ def check_image(img):
   pred = int(top_class)
   return pred, top_p.detach().numpy().reshape(-1)[0]*100
 
-def x_ray_pred(image, is_cnn_feat):
+def x_ray_pred(image):
   
   int_to_class = ['NORMAL', 'PNEUMONIA']
   img, convert = img_to_tensor(image)
-  if is_cnn_feat:
-    # print('Reached')
-    visualize_cnn(img)
   pred, prob = check_image(img)
-  grad_cam(image, pred)
+
   
   return pred, prob, int_to_class[pred], convert
 
 #--------------------------------------------------------
-from torchvision.transforms import ToPILImage
-to_img = ToPILImage()
 
 
-def save_visual(output, name):
-    for i in range(int(output.size(0))):
-      img = to_img(output[i])
-      basewidth = 150
-      wpercent = (basewidth/float(img.size[0]))
-      hsize = int((float(img.size[1])*float(wpercent)))
-      img = img.resize((basewidth,hsize), Image.ANTIALIAS)
-      img.save('static/visual_img/{}_{}.jpg'.format(name,i))
-
-def visualize_cnn(x):
-  conv1 = nn.Sequential(*list(model.resnet.children())[:1])(x)[0,0:10,:,:]
-  layer1 = nn.Sequential(*list(model.resnet.children())[:5])(x)[0,:10,:,:]
-  layer2 = nn.Sequential(*list(model.resnet.children())[:6])(x)[0,:10,:,:]
-
-  save_visual(conv1, 'conv1')
-  save_visual(layer1, 'layer1')
-  save_visual(layer2, 'layer2')
-
-
-
-def grad_cam(img_path, cls):
-  files = glob.glob('static/grad_cam/*')
-  for f in files: 
-    os.remove(f)
-
-  # print(cls)
-  img, _ = img_to_tensor(img_path)
-
-  pred = torch.exp(model2(img))
-
-  pred.argmax(dim=1)
-  pred[:,int(cls)].backward()
-  gradients = model2.get_gradient()
-  pooled_gradients = torch.mean(gradients, dim=[0, 2, 3])
-  activations = model2.get_activations(img).detach()
-
-  for i in range(512):
-      activations[:, i, :, :] *= pooled_gradients[i]
-
-  heatmap = torch.mean(activations, dim=1).squeeze()
-  heatmap = np.maximum(heatmap, 0)
-  heatmap /= torch.max(heatmap)
-  heatmap = heatmap.numpy()
-
-  # interpolate the heatmap
-  img = cv2.imread(img_path)
-  heatmap = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
-  heatmap = np.uint8(255 * heatmap)
-  heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
-  superimposed_img = heatmap * 0.4 + img
-  cv2.imwrite('static/grad_cam/map.jpg', superimposed_img)
 
 
 
