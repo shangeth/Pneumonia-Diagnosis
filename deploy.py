@@ -70,8 +70,9 @@ import torch.nn as nn
 from resnet_models import *
 
 
-model =  ResNet()
-model.load_state_dict(torch.load('model/best_model.pt', map_location='cpu'))
+# model =  ResNet()
+# model.load_state_dict(torch.load('model/best_model.pt', map_location='cpu'))
+model = get_densenet_model()
     
 model.eval()
 model2 = ResNet2(model.cpu())
@@ -129,9 +130,9 @@ def save_visual(output, name):
       img.save('static/visual_img/{}_{}.jpg'.format(name,i))
 
 def visualize_cnn(x):
-  conv1 = nn.Sequential(*list(model.resnet.children())[:1])(x)[0,0:10,:,:]
-  layer1 = nn.Sequential(*list(model.resnet.children())[:5])(x)[0,:10,:,:]
-  layer2 = nn.Sequential(*list(model.resnet.children())[:6])(x)[0,:10,:,:]
+  conv1 = nn.Sequential(*list(model.features.children()))[:1](x)[0,0:10,:,:]
+  layer1 = nn.Sequential(*list(model.features.children()))[:5](x)[0,:10,:,:]
+  layer2 = nn.Sequential(*list(model.features.children()))[:6](x)[0,:10,:,:]
 
   save_visual(conv1, 'conv1')
   save_visual(layer1, 'layer1')
