@@ -14,7 +14,7 @@
   <body>
     <div id='outer' class="container">
       <div class="jumbotron">
-        <h1 class="display-4">Diagnosis Report of the x ray</h1>
+        <h1 class="display-4">X-Ray Analysis</h1>
         <hr>
         {% if convert %}
             <h3>The image uploaded is a single channel image, so it is converted to a RGB image. This may result in lower prediction confidence.</h3>
@@ -556,7 +556,10 @@
       </div> 
       <div class="jumbotron container-fluid"  style="display: {{ grad_cam_disp }}">
         <h1 class="display-4"><a href="https://arxiv.org/abs/1610.02391">Grad Cam</a> of the X-ray</h1>
+        <h5>Detected pathology shown in <font color="red">Red</font></h5>
+        <br>
         <img class=".img-fluid" style="max-width: 50%; height: auto;" src="{{ url_for('static', filename='grad_cam/map.jpg')}}"><br>
+        
       </div>
 
 
