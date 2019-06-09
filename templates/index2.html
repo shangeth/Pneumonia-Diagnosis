@@ -12,8 +12,9 @@
     <title>Pneumonia Diagnosis</title>
   </head>
   <body>
-    <div id='outerindex' class="container-fluid row justify-content-center">
-      <div class="jumbotron col-lg-8" >
+    <div id='outerindex' class="container justify-content-center">
+      <!-- <div class="row"> -->
+      <div class="jumbotron" >
         
         <h1>Pneumonia Diagnosis</h1>
         <h5> Upload the x-ray image to check for Pneumonia with a Deep learning Model trained with PyTorch</h5>
@@ -57,7 +58,9 @@
           <br>
 
           <div class="row">
-            <div class="col">
+            <hr>
+            <div class="col-sm">
+              <hr>
               <h3>NORMAL</h3>
               <hr>
               <img type="button" onclick="enable_spinner(); window.location.href='{{ url_for( 'submit_example', example='n1' ) }}'; " src="{{ url_for('static', filename='example_imgs/n1.jpg')}}" class=" rounded float-left example_imgs" id='n1'>
@@ -67,8 +70,10 @@
               <img type="button" onclick="enable_spinner(); window.location.href='{{ url_for( 'submit_example', example='n3' ) }}'; " src="{{ url_for('static', filename='example_imgs/n3.jpg')}}" class=" rounded float-left example_imgs" id='n3'>
                 
             </div>
-
-            <div class="col">
+            
+            
+            <div class="col-sm">
+              <hr>
               <h3>PNEUMONIA</h3>
               <hr>
               <img type="button" onclick="enable_spinner(); window.location.href='{{ url_for( 'submit_example', example='p1' ) }}';" src="{{ url_for('static', filename='example_imgs/p1.jpg')}}" class=" rounded float-right example_imgs" id='p1'>
@@ -81,7 +86,8 @@
 
 
 
-      </div>    
+      </div>  
+    <!-- </div>   -->
     </div>
 
     <!-- Optional JavaScript -->

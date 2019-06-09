@@ -138,8 +138,6 @@ class ResNet2(nn.Module):
         
         # extract the features
         x = self.features(x)
-        print(x.shape)
-
         
         # register the hook
         h = x.register_hook(self.activations_hook)

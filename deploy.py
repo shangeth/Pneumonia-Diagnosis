@@ -46,8 +46,12 @@ def upload():
         else:
           is_cnn_feat='none'
           visual_files = []
+        if int(clss)==1: 
+          grad_cam_disp='block'
+        else: 
+          grad_cam_disp='none'
           
-        return render_template('report.html', pred=pred, prob=round(prob,5), filename=filename, visual_files=visual_files, convert=convert, cnn_visual=is_cnn_feat)
+        return render_template('report.html', pred=pred, prob=round(prob,5), filename=filename, visual_files=visual_files, convert=convert, cnn_visual=is_cnn_feat, grad_cam_disp=grad_cam_disp)
 
         # '<h1>Predicted Class = {}</h1><h1> Prob = {}% </h1><h1>Prediction = {}</h1>'.format(clss, prob, pred)
 
@@ -57,7 +61,12 @@ def submit_example(example):
   example_dict = {'n1':'n1.jpg', 'n2':'n2.jpeg', 'n3':'n3.jpg', 'p1':'p1.jpg', 'p2':'p2.jpg', 'p3':'p3.jpeg'}
   clss, prob, pred, convert = x_ray_pred('static/example_imgs/'+str(example_dict[example]), request.form.get('is_cnn_feat'))
   filename = '../static/example_imgs/'+str(example_dict[example])
-  return render_template('report.html', pred=pred, prob=round(prob,5), filename=filename, visual_files=[], convert=convert, cnn_visual='none')
+  if int(clss)==1: 
+    grad_cam_disp='block'
+  else: 
+    grad_cam_disp='none'
+
+  return render_template('report.html', pred=pred, prob=round(prob,5), filename=filename, visual_files=[], convert=convert, cnn_visual='none', grad_cam_disp=grad_cam_disp)
 
 
 
@@ -108,10 +117,10 @@ def x_ray_pred(image, is_cnn_feat):
   int_to_class = ['NORMAL', 'PNEUMONIA']
   img, convert = img_to_tensor(image)
   if is_cnn_feat:
-    # print('Reached')
     visualize_cnn(img)
   pred, prob = check_image(img)
-  grad_cam(image, pred)
+  if int(pred)==1:
+    grad_cam(image, pred)
   
   return pred, prob, int_to_class[pred], convert
 
@@ -144,8 +153,6 @@ def grad_cam(img_path, cls):
   files = glob.glob('static/grad_cam/*')
   for f in files: 
     os.remove(f)
-
-  # print(cls)
   img, _ = img_to_tensor(img_path)
 
   pred = torch.exp(model2(img))
